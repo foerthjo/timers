@@ -1,0 +1,170 @@
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+body {
+	background-color: #221724;
+	background-image: linear-gradient(#241722, #1a131f);
+	background-attachment: fixed;
+	color: #fff;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+button {
+	border: none;
+	background-color: #414a52;
+	padding: 12px 8px;
+	border-radius: 4px;
+	cursor: pointer;
+	color: #fff;
+	font-weight: bold;
+	outline: none;
+}
+button * {
+	text-align: left;
+}
+
+input, select {
+	border: none;
+	background-color: #373c43;
+	border-radius: 4px;
+	padding: 12px 8px;
+	color: #fff;
+	outline: none;
+}
+
+button.red {
+	background-image: linear-gradient(90deg, #a5250f, #790817);
+}
+button.green {
+	background-image: linear-gradient(90deg, #c9cc0d, #3a9811);
+}
+
+.row, .column, .flex {
+	display: flex;
+	gap: 8px;
+	align-items: stretch;
+	width: 100%;
+}
+
+.column {
+	flex-direction: column;
+}
+
+.row button {
+	flex-grow: 1;
+}
+
+.row > span {
+	align-self: center;
+}
+
+.scrollable {
+	overflow-x: auto;
+}
+.scrollable > * {
+	min-width: max-content;
+}
+
+.timer-row {
+	display: flex;
+	gap: 8px;
+}
+.timer-row > * {
+	width: max-content;
+}
+.timer {
+	font-size: 24pt;
+	font-family: monospace;
+}
+.unit {
+	font-size: 8pt;
+	text-align: center;
+}
+
+.page {
+	width: min-content;
+	max-width: 100%;
+	margin: 8px auto;
+}
+.page {
+	display: flex;
+	flex-direction: column;
+	padding: 8px;
+	gap: 8px;
+}
+
+.hideable {
+	opacity: 100%;
+	pointer-events: all;
+	transform: translateY(0);
+	block-size: auto;
+	transition: transform 250ms, opacity 250ms;
+}
+.hideable.hidden {
+	opacity: 0;
+	pointer-events: none;
+	transform: translateY(-80px);
+	block-size: 0;
+}
+.nodisplay {
+	display: none;
+}
+
+.addButton {
+	padding: 0;
+	width: 48pt;
+	height: 48pt;
+	border-radius: 999rem;
+	position: fixed;
+	bottom: 24px;
+	right: 24px;
+	bottom: 24px;
+	background-color: rgb(182, 220, 224);
+	transition: 250ms;
+	z-index: 1;
+}
+.addButton.expanded {
+	background-color: rgb(228, 185, 179);
+}
+.addButton::after, .addButton::before {
+	content: '';
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	background-color: rgb(34, 23, 36);
+	transform: translate(-50%, -50%) rotate(0);
+	transition: 250ms;
+}
+.addButton::after {
+	width: 6px;
+	height: 32px;
+}
+.addButton::before {
+	width: 32px;
+	height: 6px;
+}
+.addButton.expanded::after, .addButton.expanded::before {
+	transform: translate(-50%, -50%) rotate(225deg);
+}
+
+.timer-element {
+	border-radius: 4px;
+	background:
+	linear-gradient(45deg, #5a0831, #390c58 50%, #2a1575)
+	;
+	padding: 8px;
+}
+
+.padded {
+	padding: 4px;
+	padding-left: 8px;
+}
+
+.invalid-msg {
+	color: rgb(196, 0, 0);
+}
+
+.nogap {gap: 0;}

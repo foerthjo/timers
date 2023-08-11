@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="style.css">
+	<link rel="manifest" href="manifest.json">
+	<title>Timers</title>
+</head>
+<body>
+	<div class="page">
+		<div id="navbar" class="scrollable row"></div>
+		<div id="form" class="column hideable hidden nodisplay"></div>
+		<button id="toggleFormButton" onclick="toggleForm();" class="addButton"></button>
+		<div id="list" class="column">
+			
+		</div>
+	</div>
+</body>
+<script src="jsEssentials.js"></script>
+<script src="validation.js"></script>
+<script src="time.js"></script>
+<script src="timer.js"></script>
+<script src="timerList.js"></script>
+<script src="days.js"></script>
+<script src="once.js"></script>
+<script src="minutes.js"></script>
+<script src="months.js"></script>
+<script src="weeks.js"></script>
+<script src="years.js"></script>
+</html>
+
+<script>
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register("PWACache.js");
+	}
+
+	let data = JSON.parse(localStorage.getItem('timers')) || {"minutes":[{"name":"train","period":{"minutes":60},"startDate":"2023-02-18T15:22:00.000Z"},{"name":"bus","period":{"minutes":15},"startDate":"2023-02-18T14:37:00.000Z"}],"day":[{"name":"wakeup","period":{"days":1},"startDate":"2023-02-19T06:00:00.000Z"},{"name":"lunch","period":{"days":1},"startDate":"2023-02-19T11:00:00.000Z"},{"name":"dinner","period":{"days":1},"startDate":"2023-02-18T17:00:00.000Z"},{"name":"breakfast","period":{"days":1},"startDate":"2023-02-19T07:00:00.000Z"},{"name":"sleep","period":{"days":1},"startDate":"2023-02-18T22:00:00.000Z"}],"week":[{"name":"monday morning","period":{"days":7},"startDate":"2023-02-20T06:00:00.000Z"},{"name":"friday evening","period":{"days":7},"startDate":"2023-02-24T16:00:00.000Z"}],"year":[{"name":"christmas","period":{"years":1},"startDate":"2023-12-23T23:53:28.000Z"},{"name":"silvester","period":{"years":1},"startDate":"2023-12-30T23:53:28.000Z"}],"month":[{"name":"next month","period":{"months":1},"startDate":"2023-03-02T00:00:00.000Z"},{"name":"middle of the month","period":{"months":1},"startDate":"2023-03-14T00:00:00.000Z"}]};
+	function storeData() { localStorage.setItem('timers', JSON.stringify(data)); }
+	
+	let selected = null;
+	select('once');
+
+	function select(eventList) {
+		if (selected == eventList) {
+			toggleForm();
+			return;
+		}
+
+		selected = eventList;
+		byID('navbar').innerHTML = renderNavbar();
+		let selectedNavItem = byID(`nav_${selected}`);
+		if (selectedNavItem) {
+			selectedNavItem.style = "background-color: #fff; color: rgb(34, 23, 36);";
+			selectedNavItem.scrollIntoView();
+		}
+		renderAll();
+	}
+	function renderNavbar() {
+		return `
+		<button id="nav_once" onclick="select('once');">once</button>
+		<button id="nav_minutes" onclick="select('minutes');">every nth minute</button>
+		<button id="nav_day" onclick="select('day');">daily</button>
+		<button id="nav_week" onclick="select('week');">weekly</button>
+		<button id="nav_month" onclick="select('month');">monthly</button>
+		<button id="nav_year" onclick="select('year');">yearly</button>
+		`;
+	}
+
+	renderAll();
+	function renderAll() {
+		switch (selected) {
+			case 'once': once.render(); break;
+			case 'minutes': minutes.render(); break;
+			case 'day': days.render(); break;
+			case 'week': weeks.render(); break;
+			case 'month': months.render(); break;
+			case 'year': years.render(); break;
+		}
+	}
+
+	function toggleForm() {
+		switch (selected) {
+			case 'once': once.toggleForm(); break;
+			case 'minutes': minutes.toggleForm(); break;
+			case 'day': days.toggleForm(); break;
+			case 'week': weeks.toggleForm(); break;
+			case 'month': months.toggleForm(); break;
+			case 'year': years.toggleForm(); break;
+		}
+	}
+
+	function addEvent(name, period, startDate) {
+		let events = data[selected] || [];
+		events.push({
+			name,
+			period,
+			startDate,
+		});
+		data[selected] = events;
+		storeData();
+		renderAll();
+	}
+
+	function renderList() {
+		let events = data[selected] || [];
+		byID('list').innerHTML = events.map((event, index) => timer.render(selected, index, event.name)).join('');
+	}
+
+	function remove(sel, index) {
+		let events = data[sel];
+		if (events) {
+			if (index >= 0 && index < events.length) {
+				events.splice(index, 1);
+			}
+		}
+		data[sel] = events;
+		storeData();
+		renderList();
+	}
+
+	function toggleForm() {
+		let form = byID('form');
+		form.classList.toggle('hidden');
+		byID('toggleFormButton').classList.toggle('expanded');
+
+		if (!form.classList.contains('hidden')) {
+			form.classList.remove('nodisplay');
+			form.scrollIntoView({behavior: 'smooth', block: 'end', inline: 'nearest'});
+		}
+
+		setTimeout(() => {
+			if (form.classList.contains('hidden'))
+				form.classList.add('nodisplay');
+		}, 150);
+	}
+
+	timerList.updateTimers();
+</script>

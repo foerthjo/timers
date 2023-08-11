@@ -1,0 +1,19 @@
+{
+	"name": "timers",
+	"icons": [
+		{
+			"src": "icon_512.png",
+			"sizes": "512x512",
+			"type": "image/png"
+		},
+		{
+			"src": "favicon.ico",
+			"sizes": "32x32",
+			"type": "image/png"
+		}
+	],
+	"start_url": ".",
+	"display": "standalone",
+	"prefer_related_applications": false,
+	"background_color": "#221724"
+}
